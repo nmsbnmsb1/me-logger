@@ -1,0 +1,19 @@
+{
+  "name": "me-logger",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "log4js": "^6.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.4",
+    "@types/log4js": "^2.3.5",
+    "typescript": "^3.8.2",
+    "prettier": "^1.19.1",
+    "prettier-eslint": "^9.0.1",
+    "prettier-tslint": "^0.4.2"
+  }
+}
