@@ -22,9 +22,9 @@
 // SOFTWARE.
 
 export default (config: any) => {
-  let { title, level, layout } = config;
+  let { level, layout } = config;
   level = level ? level.toUpperCase() : 'ALL';
-  layout = layout || { type: 'pattern', pattern: `%[[%d] [${title || '%z'}] [%p]%] - %m` };
+  layout = layout || { type: 'pattern', pattern: `%[[%d] [%z] [%p]%] - %m` };
 
   return Object.assign(
     {

@@ -1,4 +1,3 @@
-import log4js from 'log4js';
 export default class Logger {
     static Console: (config: any) => any;
     static File: (config: any) => any;
@@ -7,9 +6,7 @@ export default class Logger {
     private adapter;
     private config;
     private logger;
-    constructor(adapter?: any, config?: any);
-    formatConfig(config: any): any;
-    configure(config: any): log4js.Log4js;
+    constructor(adapter?: any, config?: any, category?: any);
     setLogger(config: any, category?: any): void;
     trace(message: any, ...args: any[]): void;
     debug(message: any, ...args: any[]): void;

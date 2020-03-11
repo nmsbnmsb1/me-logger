@@ -37,23 +37,23 @@ export default class Logger {
   private config: any;
   private logger: log4js.Logger;
 
-  constructor(adapter?: any, config: any = {}) {
+  constructor(adapter?: any, config: any = {}, category?: any) {
     this.adapter = adapter || ConsoleAdapter;
-    this.formatConfig(config);
-    this.setLogger(this.formatConfig(config));
+    this.setLogger(config, category);
   }
 
-  public formatConfig(config) {
-    this.config = this.adapter(config);
-    return this.config;
-  }
+  // public formatConfig(config) {
+  //   this.config = this.adapter(config);
+  //   return this.config;
+  // }
 
-  public configure(config: any) {
-    return log4js.configure(config);
-  }
+  // public configure(config: any) {
+  //   return log4js.configure(config);
+  // }
 
   public setLogger(config: any, category?: any) {
-    this.configure(config);
+    this.config = this.adapter(config);
+    log4js.configure(this.config);
     this.logger = log4js.getLogger(category);
   }
 
