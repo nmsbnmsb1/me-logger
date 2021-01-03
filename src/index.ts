@@ -28,53 +28,61 @@ import DateFileAdapter from './datefile';
 import GelfAdapter from './gelf';
 
 export default class Logger {
-  public static Console = ConsoleAdapter;
-  public static File = FileAdapter;
-  public static DateFile = DateFileAdapter;
-  public static Gelf = GelfAdapter;
+	public static Console = ConsoleAdapter;
+	public static File = FileAdapter;
+	public static DateFile = DateFileAdapter;
+	public static Gelf = GelfAdapter;
 
-  private adapter: any;
-  private config: any;
-  private logger: log4js.Logger;
+	private adapter: any;
+	private config: any;
+	private logger: log4js.Logger;
 
-  constructor(adapter?: any, config: any = {}, category?: any) {
-    this.adapter = adapter || ConsoleAdapter;
-    this.setLogger(config, category);
-  }
+	constructor(adapter?: any, config: any = {}, category?: any) {
+		this.adapter = adapter || ConsoleAdapter;
+		this.setLogger(config, category);
+	}
 
-  // public formatConfig(config) {
-  //   this.config = this.adapter(config);
-  //   return this.config;
-  // }
+	// public formatConfig(config) {
+	//   this.config = this.adapter(config);
+	//   return this.config;
+	// }
 
-  // public configure(config: any) {
-  //   return log4js.configure(config);
-  // }
+	// public configure(config: any) {
+	//   return log4js.configure(config);
+	// }
 
-  public setLogger(config: any, category?: any) {
-    this.config = this.adapter(config);
-    log4js.configure(this.config);
-    this.logger = log4js.getLogger(category);
-  }
+	public setLogger(config: any, category?: any) {
+		this.config = this.adapter(config);
+		log4js.configure(this.config);
+		this.logger = log4js.getLogger(category);
+	}
 
-  //
-  public trace(message: any, ...args) {
-    return this.logger.trace(message, ...args);
-  }
+	//
+	public trace(message: any, ...args) {
+		this.logger.trace(message, ...args);
+	}
 
-  public debug(message: any, ...args) {
-    return this.logger.debug(message, ...args);
-  }
+	public debug(message: any, ...args) {
+		this.logger.debug(message, ...args);
+	}
 
-  public info(message: any, ...args) {
-    return this.logger.info(message, ...args);
-  }
+	public info(message: any, ...args) {
+		this.logger.info(message, ...args);
+	}
 
-  public warn(message: any, ...args) {
-    return this.logger.warn(message, ...args);
-  }
+	public warn(message: any, ...args) {
+		this.logger.warn(message, ...args);
+	}
 
-  public error(message: any, ...args) {
-    return this.logger.error(message, ...args);
-  }
+	public error(message: any, ...args) {
+		this.logger.error(message, ...args);
+	}
+
+	public fatal(message: any, ...args) {
+		this.logger.fatal(message, ...args);
+	}
+
+	public mark(message: any, ...args) {
+		this.logger.mark(message, ...args);
+	}
 }

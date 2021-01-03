@@ -13,4 +13,6 @@ export default class Logger {
     info(message: any, ...args: any[]): void;
     warn(message: any, ...args: any[]): void;
     error(message: any, ...args: any[]): void;
+    fatal(message: any, ...args: any[]): void;
+    mark(message: any, ...args: any[]): void;
 }
