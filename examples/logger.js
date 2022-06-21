@@ -1,8 +1,14 @@
-const Logger = require('./../lib').default;
+const { Config, Logger, Layout } = require('./../lib');
 
-const funcNames = ['trace', 'debug', 'info', 'warn', 'error'];
-const logger = new Logger(Logger.Console, { level: 'info', layout: { type: 'pattern', pattern: `%[[%d] [%c] [%p]%] - %m` } }, 'Example');
+let logger1 = new Logger();
+//console.log(Config.getC().appenders);
+logger1.info('Hello World!!');
 
-for (const funcName of funcNames) {
-  logger[funcName]('Hello World');
-}
+//修改配置
+Config.setAppender('console', { layout: { pattern: `%[[%d] [%z] [%p]%] - 111%m` } });
+//console.log(Config.getC().appenders);
+logger1.info('Hello World!!');
+
+Config.setAppender('console', { layout: { pattern: Layout.default.pattern } });
+//console.log(Config.getC().appenders);
+logger1.info('Hello World!!');
