@@ -19,14 +19,12 @@ export declare class Config {
     static PM2InstanceVar: string;
     static DisableClustering: string;
     private static c;
-    static setAppender(key: string, c: any, mode?: 'merge' | 'override', apply?: boolean): void;
-    static setCategorie(key: string, c: any, mode?: 'merge' | 'override', apply?: boolean): void;
-    static set(key: string, c: any, mode?: 'merge' | 'override', apply?: boolean): void;
-    static setLayoutPattern(key?: string, pattern?: string, apply?: boolean): void;
-    static setCategoryLevel(key?: string, level?: string, apply?: boolean): void;
-    static getC(): any;
-    static apply(): void;
     static reset(): void;
+    static apply(): void;
+    private static getTarget;
+    static set(keyPath: string, c: any, mode?: 'merge' | 'override', apply?: boolean): void;
+    static setLayoutPattern(appenderKey?: string, pattern?: string, apply?: boolean): void;
+    static setCategoryLevel(categoryKey?: string, level?: string, apply?: boolean): void;
 }
 export declare class Logger {
     logger: log4js.Logger;

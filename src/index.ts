@@ -1,5 +1,7 @@
 import log4js from 'log4js';
 import { ObjectUtils } from 'me-utils';
+//import rfdc from 'rfdc';
+//const deepClone = rfdc({ proto: true });
 
 export const Adapter = {
 	Console: (config: any) => {
@@ -9,12 +11,8 @@ export const Adapter = {
 
 		return Object.assign(
 			{
-				appenders: {
-					console: { type: 'console', layout },
-				},
-				categories: {
-					default: { appenders: ['console'], level },
-				},
+				appenders: { console: { type: 'console', layout } },
+				categories: { default: { appenders: ['console'], level } },
 			},
 			config
 		);
@@ -27,12 +25,8 @@ export const Adapter = {
 		// combine config for file appender, common config for log4js
 		return Object.assign(
 			{
-				appenders: {
-					file: { type: 'file', filename, maxLogSize, backups, absolute, layout },
-				},
-				categories: {
-					default: { appenders: ['file'], level },
-				},
+				appenders: { file: { type: 'file', filename, maxLogSize, backups, absolute, layout } },
+				categories: { default: { appenders: ['file'], level } },
 			},
 			config
 		);
@@ -44,12 +38,8 @@ export const Adapter = {
 
 		return Object.assign(
 			{
-				appenders: {
-					dateFile: { type: 'dateFile', filename, pattern, alwaysIncludePattern, absolute, layout },
-				},
-				categories: {
-					default: { appenders: ['dateFile'], level },
-				},
+				appenders: { dateFile: { type: 'dateFile', filename, pattern, alwaysIncludePattern, absolute, layout } },
+				categories: { default: { appenders: ['dateFile'], level } },
 			},
 			config
 		);
@@ -58,12 +48,8 @@ export const Adapter = {
 		const { level, host, hostname, port, facility } = config;
 		return Object.assign(
 			{
-				appenders: {
-					gelf: { type: 'gelf', host, hostname, port, facility },
-				},
-				categories: {
-					default: { appenders: ['gelf'], level },
-				},
+				appenders: { gelf: { type: 'gelf', host, hostname, port, facility } },
+				categories: { default: { appenders: ['gelf'], level } },
 			},
 			config
 		);
@@ -82,82 +68,56 @@ export class Config {
 	public static PM2InstanceVar = 'pm2InstanceVar';
 	public static DisableClustering = 'disableClustering';
 
-	private static c: any = {
-		appenders: { console: { type: 'console', layout: { ...Layout.default } } },
-		categories: { default: { appenders: ['console'], level: 'INFO' } },
-	};
-
-	//配置Appender
-	public static setAppender(key: string, c: any, mode: 'merge' | 'override' = 'merge', apply: boolean = true) {
-		if (!c) delete Config.c.appenders[key];
-		else if (mode === 'merge') Config.c.appenders[key] = ObjectUtils.extend(Config.c.appenders[key], c);
-		else Config.c.appenders[key] = c;
-		//
-		if (apply) Config.apply();
-	}
-	public static setCategorie(key: string, c: any, mode: 'merge' | 'override' = 'merge', apply: boolean = true) {
-		if (!c) {
-			if (key !== 'default') delete Config.c.categories[key];
-		} else if (mode === 'merge') Config.c.categories[key] = ObjectUtils.extend(Config.c.categories[key], c);
-		else Config.c.categories[key] = c;
-		//
-		if (apply) Config.apply();
-	}
-	public static set(key: string, c: any, mode: 'merge' | 'override' = 'merge', apply: boolean = true) {
-		if (mode === 'merge') Config.c[key] = ObjectUtils.extend(Config.c[key], c);
-		else Config.c[key] = c;
-		//
-		if (apply) Config.apply();
-	}
-
-	//快捷方式
-	// public static setLayout(
-	// 	key: string = 'console',
-	// 	layout: {
-	// 		type: 'basic' | 'coloured' | 'messagePassThrough' | 'dummy' | 'pattern' | string;
-	// 		pattern?: string;
-	// 		tokens?: { [token: string]: (logEvent: any) => string };
-	// 	},
-	// 	apply: boolean = true
-	// ) {
-	// 	if (Config.c.appenders[key]) {
-	// 		Config.c.appenders[key].layout = layout;
-	// 		//
-	// 		if (apply) Config.apply();
-	// 	}
-	// }
-	public static setLayoutPattern(key: string = 'console', pattern: string = `%[[%d] [%z] [%p]%] - %m`, apply: boolean = true) {
-		if (Config.c.appenders[key] && Config.c.appenders[key].layout) {
-			Config.c.appenders[key].layout.pattern = pattern;
-			//
-			if (apply) Config.apply();
-		}
-	}
-	public static setCategoryLevel(key: string = 'default', level: string = `INFO`, apply: boolean = true) {
-		if (Config.c.categories[key]) {
-			Config.c.categories[key].level = level;
-			//
-			if (apply) Config.apply();
-		}
-	}
-
+	private static c: any;
 	//使配置生效
-	public static getC() {
-		return Config.c;
-	}
-	public static apply() {
-		log4js.configure(Config.c);
-	}
-	//重置配置
 	public static reset() {
 		Config.c = {
 			appenders: { console: { type: 'console', layout: { ...Layout.default } } },
 			categories: { default: { appenders: ['console'], level: 'INFO' } },
 		};
+		Config.apply();
+	}
+	public static apply() {
 		log4js.configure(Config.c);
 	}
+
+	//appenders.console.layout.pattern
+	private static getTarget(keyPath: string) {
+		let target = Config.c;
+		let tmp = keyPath.split('.');
+		for (let i = 0; i <= tmp.length - 2; i++) {
+			let key = tmp[i];
+			if (target[key]) {
+				target = target[key];
+			} else {
+				target = undefined;
+				break;
+			}
+		}
+		return target ? { target, key: tmp[tmp.length - 1] } : undefined;
+	}
+	//配置Appender
+	public static set(keyPath: string, c: any, mode: 'merge' | 'override' = 'merge', apply: boolean = true) {
+		let t = Config.getTarget(keyPath);
+		if (!t) return;
+		//
+		let { target, key } = t;
+		if (!c) delete target[key];
+		if (mode === 'merge') target[key] = ObjectUtils.extend(target[key], c);
+		else target[key] = c;
+		//
+		if (apply) Config.apply();
+	}
+
+	//快捷方式
+	public static setLayoutPattern(appenderKey: string = 'console', pattern: string = `%[[%d] [%z] [%p]%] - %m`, apply: boolean = true) {
+		Config.set(`${Config.Appenders}.${appenderKey}.layout.pattern`, pattern, 'override', apply);
+	}
+	public static setCategoryLevel(categoryKey: string = 'default', level: string = `INFO`, apply: boolean = true) {
+		Config.set(`${Config.Categories}.${categoryKey}.level`, level, 'override', apply);
+	}
 }
-Config.apply();
+Config.reset();
 
 //
 export class Logger {
