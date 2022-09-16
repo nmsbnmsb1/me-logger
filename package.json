@@ -6,7 +6,7 @@
 		"build": "tsc"
 	},
 	"dependencies": {
-		"me-utils": "../me-utils",
+		"me-utils": "github:nmsbnmsb1/me-utils.git",
 		"log4js": "^6.6.1"
 	},
 	"devDependencies": {
