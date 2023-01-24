@@ -103,8 +103,10 @@ export class Config {
 		//
 		let { target, key } = t;
 		if (!c) delete target[key];
-		if (mode === 'merge') target[key] = ObjectUtils.extend(target[key], c);
-		else target[key] = c;
+		else {
+			if (mode === 'merge') target[key] = ObjectUtils.extend(target[key], c);
+			else target[key] = c;
+		}
 		//
 		if (apply) Config.apply();
 	}
