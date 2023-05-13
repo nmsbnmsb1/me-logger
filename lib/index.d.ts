@@ -1,15 +1,15 @@
 import log4js from 'log4js';
-export declare const Adapter: {
-    Console: (config: any) => any;
-    File: (config: any) => any;
-    DateFile: (config: any) => any;
-    Gelf: (config: any) => any;
-};
 export declare const Layout: {
     default: {
         type: string;
         pattern: string;
     };
+};
+export declare const Adapter: {
+    Console: (config: any) => any;
+    File: (config: any) => any;
+    DateFile: (config: any) => any;
+    Gelf: (config: any) => any;
 };
 export declare class Config {
     static Levels: string;

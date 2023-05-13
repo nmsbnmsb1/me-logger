@@ -3,6 +3,10 @@ import { ObjectUtils } from 'me-utils';
 //import rfdc from 'rfdc';
 //const deepClone = rfdc({ proto: true });
 
+export const Layout = {
+	default: { type: 'pattern', pattern: `%[[%d] [%z] [%p]%] - %m` },
+};
+
 export const Adapter = {
 	Console: (config: any) => {
 		let { level, layout } = config;
@@ -54,10 +58,6 @@ export const Adapter = {
 			config
 		);
 	},
-};
-
-export const Layout = {
-	default: { type: 'pattern', pattern: `%[[%d] [%z] [%p]%] - %m` },
 };
 
 export class Config {
