@@ -10,8 +10,8 @@
 		"log4js": "^6.9.1"
 	},
 	"devDependencies": {
-		"@types/node": "^20.2.3",
+		"@types/node": "^20.3.3",
 		"prettier": "^2.8.8",
-		"typescript": "^5.0.4"
+		"typescript": "^5.1.6"
 	}
 }
