@@ -139,6 +139,9 @@ export class Logger {
 	}
 
 	//
+	public isLevelEnabled(level: string) {
+		return this.logger.isLevelEnabled(level);
+	}
 	public trace(message: any, ...args) {
 		this.logger.trace(message, ...args);
 	}

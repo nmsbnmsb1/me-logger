@@ -31,6 +31,7 @@ export declare class Logger {
     category: any;
     constructor(category?: any);
     setCategory(category: any): this;
+    isLevelEnabled(level: string): boolean;
     trace(message: any, ...args: any[]): void;
     debug(message: any, ...args: any[]): void;
     info(message: any, ...args: any[]): void;
