@@ -11,21 +11,19 @@ export declare const Adapter: {
     DateFile: (config: any) => any;
     Gelf: (config: any) => any;
 };
-export declare class Config {
-    static Levels: string;
-    static Appenders: string;
-    static Categories: string;
-    static PM2: string;
-    static PM2InstanceVar: string;
-    static DisableClustering: string;
-    private static c;
-    static reset(): void;
-    static apply(): void;
-    private static getTarget;
-    static set(keyPath: string, c: any, mode?: 'merge' | 'override', apply?: boolean): void;
-    static setLayoutPattern(appenderKey?: string, pattern?: string, apply?: boolean): void;
-    static setCategoryLevel(categoryKey?: string, level?: string, apply?: boolean): void;
-}
+export declare const Config: {
+    Levels: string;
+    Appenders: string;
+    Categories: string;
+    PM2: string;
+    PM2InstanceVar: string;
+    DisableClustering: string;
+    reset(): void;
+    apply(): void;
+    set(keyPath: string, c: any, mode?: "merge" | "override", apply?: boolean): void;
+    setLayoutPattern(appenderKey?: string, pattern?: string, apply?: boolean): void;
+    setCategoryLevel(categoryKey?: string, level?: string, apply?: boolean): void;
+};
 export declare class Logger {
     logger: log4js.Logger;
     category: any;
