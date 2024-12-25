@@ -4,9 +4,8 @@ import { ObjectUtils } from 'me-utils';
 //const deepClone = rfdc({ proto: true });
 
 export const Layout = {
-	default: { type: 'pattern', pattern: `%[[%d] [%z] [%p]%] - %m` },
+	default: { type: 'pattern', pattern: '%[[%d] [%z] [%p]%] - %m' },
 };
-
 export const Adapter = {
 	Console: (config: any) => {
 		let { level, layout } = config;
@@ -29,7 +28,16 @@ export const Adapter = {
 		// combine config for file appender, common config for log4js
 		return Object.assign(
 			{
-				appenders: { file: { type: 'file', filename, maxLogSize, backups, absolute, layout } },
+				appenders: {
+					file: {
+						type: 'file',
+						filename,
+						maxLogSize,
+						backups,
+						absolute,
+						layout,
+					},
+				},
 				categories: { default: { appenders: ['file'], level } },
 			},
 			config
@@ -42,7 +50,16 @@ export const Adapter = {
 
 		return Object.assign(
 			{
-				appenders: { dateFile: { type: 'dateFile', filename, pattern, alwaysIncludePattern, absolute, layout } },
+				appenders: {
+					dateFile: {
+						type: 'dateFile',
+						filename,
+						pattern,
+						alwaysIncludePattern,
+						absolute,
+						layout,
+					},
+				},
 				categories: { default: { appenders: ['dateFile'], level } },
 			},
 			config
@@ -60,45 +77,46 @@ export const Adapter = {
 	},
 };
 
-export class Config {
-	public static Levels = 'levels';
-	public static Appenders = 'appenders';
-	public static Categories = 'categories';
-	public static PM2 = 'pm2';
-	public static PM2InstanceVar = 'pm2InstanceVar';
-	public static DisableClustering = 'disableClustering';
+let C: any;
+//appenders.console.layout.pattern
+function getTarget(keyPath: string) {
+	let target = C;
+	let tmp = keyPath.split('.');
+	for (let i = 0; i <= tmp.length - 2; i++) {
+		let key = tmp[i];
+		if (target[key]) {
+			target = target[key];
+		} else {
+			target = undefined;
+			break;
+		}
+	}
+	return target ? { target, key: tmp[tmp.length - 1] } : undefined;
+}
+export const Config = {
+	Levels: 'levels',
+	Appenders: 'appenders',
+	Categories: 'categories',
+	PM2: 'pm2',
+	PM2InstanceVar: 'pm2InstanceVar',
+	DisableClustering: 'disableClustering',
 
-	private static c: any;
 	//使配置生效
-	public static reset() {
-		Config.c = {
-			appenders: { console: { type: 'console', layout: { ...Layout.default } } },
+	reset() {
+		C = {
+			appenders: {
+				console: { type: 'console', layout: { ...Layout.default } },
+			},
 			categories: { default: { appenders: ['console'], level: 'INFO' } },
 		};
 		Config.apply();
-	}
-	public static apply() {
-		log4js.configure(Config.c);
-	}
-
-	//appenders.console.layout.pattern
-	private static getTarget(keyPath: string) {
-		let target = Config.c;
-		let tmp = keyPath.split('.');
-		for (let i = 0; i <= tmp.length - 2; i++) {
-			let key = tmp[i];
-			if (target[key]) {
-				target = target[key];
-			} else {
-				target = undefined;
-				break;
-			}
-		}
-		return target ? { target, key: tmp[tmp.length - 1] } : undefined;
-	}
+	},
+	apply() {
+		log4js.configure(C);
+	},
 	//配置Appender
-	public static set(keyPath: string, c: any, mode: 'merge' | 'override' = 'merge', apply: boolean = true) {
-		let t = Config.getTarget(keyPath);
+	set(keyPath: string, c: any, mode: 'merge' | 'override' = 'merge', apply = true) {
+		let t = getTarget(keyPath);
 		if (!t) return;
 		//
 		let { target, key } = t;
@@ -109,16 +127,15 @@ export class Config {
 		}
 		//
 		if (apply) Config.apply();
-	}
-
+	},
 	//快捷方式
-	public static setLayoutPattern(appenderKey: string = 'console', pattern: string = `%[[%d] [%z] [%p]%] - %m`, apply: boolean = true) {
+	setLayoutPattern(appenderKey = 'console', pattern = '%[[%d] [%z] [%p]%] - %m', apply = true) {
 		Config.set(`${Config.Appenders}.${appenderKey}.layout.pattern`, pattern, 'override', apply);
-	}
-	public static setCategoryLevel(categoryKey: string = 'default', level: string = `INFO`, apply: boolean = true) {
+	},
+	setCategoryLevel(categoryKey = 'default', level = 'INFO', apply = true) {
 		Config.set(`${Config.Categories}.${categoryKey}.level`, level, 'override', apply);
-	}
-}
+	},
+};
 Config.reset();
 
 //
@@ -129,7 +146,6 @@ export class Logger {
 	constructor(category?: any) {
 		this.category = category;
 		this.logger = log4js.getLogger(this.category);
-		return this;
 	}
 
 	public setCategory(category: any) {
