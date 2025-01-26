@@ -1,6 +1,6 @@
 {
 	"name": "me-logger",
-	"version": "2.0.5",
+	"version": "2.0.6",
 	"main": "lib/index.js",
 	"scripts": {
 		"format": "biome format",
@@ -14,7 +14,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
-		"@types/node": "^22.10.5",
-		"typescript": "^5.7.2"
+		"@types/node": "^22.10.10",
+		"typescript": "^5.7.3"
 	}
 }
